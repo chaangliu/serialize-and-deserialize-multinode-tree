@@ -1,4 +1,5 @@
-package sharetree;
+package SerializeAandDeserializeMultinodeTree;
+
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -12,9 +13,12 @@ import java.util.Queue;
 //       5   6
 //  will be serialized as: "1#3,2#2,5#0,6#0,3#0,4#0,", representing: id#childCount
 
-public class SerializeAndDeserialize {
+public class Recursive {
     private static final String SPLITTER = ",";
 
+    /**
+     * Serialize a node to a string recursively.
+     */
     private String serialize(TreeNodeSp root) {
         StringBuilder sb = new StringBuilder();
         preOrder(root, sb);
@@ -28,14 +32,20 @@ public class SerializeAndDeserialize {
         }
     }
 
-    // Decodes encoded data to a tree.
+    /**
+     * Decodes encoded data to a tree recursively.
+     */
     private TreeNodeSp deserialize(String data) {
         Queue<String> queue = new LinkedList<>();
         queue.addAll(Arrays.asList(data.split(SPLITTER)));
         return buildTree(queue);
     }
 
-    // Can be used to create a new tree during mock test, or deserialize a tree represented as a queue.
+    /**
+     * DFS helper.
+     * This function can be used to create a new tree during mock test, or deserialize a tree
+     * represented as a queue.
+     */
     private TreeNodeSp buildTree(Queue<String> queue) {
         String item = queue.poll();
         String[] item_array = item.split("#");
@@ -48,7 +58,9 @@ public class SerializeAndDeserialize {
         return node;
     }
 
-    // add a node as a child of the parent node
+    /**
+     * Add a node as a child of the parent node.
+     */
     private void addNode(TreeNodeSp root, String parentId, String childId) {
         recursion(root, parentId, childId);
     }
@@ -67,21 +79,20 @@ public class SerializeAndDeserialize {
 
     public static void main(String[] args) {
         //serialize
-        TreeNodeSp node1 = new SerializeAndDeserialize().mockTest();
-        System.out.println("Serialized tree node1: " + new SerializeAndDeserialize().serialize(node1));
+        TreeNodeSp node1 = new Recursive().mockTest();
+        System.out.println("Serialized tree node1: " + new Recursive().serialize(node1));
 
         //deserialize
-        TreeNodeSp node2 = new SerializeAndDeserialize().deserialize("1#3,2#2,5#0,6#0,3#0,4#0,");
+        TreeNodeSp node2 = new Recursive().deserialize("1#3,2#2,5#0,6#0,3#0,4#0,");
 
         //deserialize node2
-        System.out.println("Serialized tree node2: " + new SerializeAndDeserialize().serialize(node2));
+        System.out.println("Serialized tree node2: " + new Recursive().serialize(node2));
 
         //add a node to node2
-        new SerializeAndDeserialize().addNode(node2, "2", "777");
-        System.out.println("Node2 after adding a node: " + new SerializeAndDeserialize().serialize(node2));
+        new Recursive().addNode(node2, "2", "777");
+        System.out.println("Node2 after adding a node: " + new Recursive().serialize(node2));
 
         System.out.println("---- End of Execution ----");
-
     }
 
     private TreeNodeSp mockTest() {
@@ -91,13 +102,13 @@ public class SerializeAndDeserialize {
         TreeNodeSp node4 = new TreeNodeSp(4);
         TreeNodeSp node5 = new TreeNodeSp(5);
         TreeNodeSp node6 = new TreeNodeSp(6);
-        TreeNodeSp node7 = new TreeNodeSp(7);
         node1.addChild(node2);
         node1.addChild(node3);
         node1.addChild(node4);
         node2.addChild(node5);
-        node2.addChild(node7);
         node2.addChild(node6);
         return node1;
     }
+
+
 }
